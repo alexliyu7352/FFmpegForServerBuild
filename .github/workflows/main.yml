@@ -30,6 +30,30 @@ jobs:
       - name: test run ffmepg
         run: |
           ./workspace/bin/ffmpeg -buildconf
+      - name: build full-static ffmpeg
+        run: |
+          while sleep 300; do echo "=====[ $SECONDS seconds still running ]====="; done &
+          SKIPINSTALL=yes VERBOSE=yes ./build-ffmpeg --build --enable-gpl-and-non-free --full-static
+          kill %1
+      - name: check full-static shared library
+        run: |
+          ldd ./workspace/bin/ffmpeg
+      - name: test run full-static ffmepg
+        run: |
+          ./workspace/bin/ffmpeg -buildconf
+      - name: Packaging...
+        run: |
+          tar czf ffmpeg-linux.tgz ./workspace/bin/ffmpeg  ./workspace/bin/ffplay  ./workspace/bin/ffprobe
+      - name: Uploading assets...
+        id: upload-release-asset 
+        uses: actions/upload-release-asset@v1
+        env:
+            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+            upload_url: ${{ github.event.release.upload_url }}
+            asset_path: ./ffmpeg-linux.tgz
+            asset_name: ffmpeg-linux.tgz
+            asset_content_type: application/gzip
       - name: clean up
         run: |
           ./build-ffmpeg --cleanup
@@ -142,16 +166,4 @@ jobs:
       - name: test run ffmepg
         run: |
           docker run --rm ffmpeg:cuda-static -buildconf
-      - name: Packaging...
-        run: |
-          tar czf ffmpeg-linux.tgz ./workspace/bin/ffmpeg  ./workspace/bin/ffplay  ./workspace/bin/ffprobe
-      - name: Uploading assets...
-        id: upload-release-asset 
-        uses: actions/upload-release-asset@v1
-        env:
-            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-            upload_url: ${{ github.event.release.upload_url }}
-            asset_path: ./ffmpeg-linux.tgz
-            asset_name: ffmpeg-linux.tgz
-            asset_content_type: application/gzip
+      
