@@ -5,7 +5,7 @@
 
 PROGNAME=$(basename "$0")
 FFMPEG_VERSION=20220103
-SCRIPT_VERSION=1.33
+SCRIPT_VERSION=1.34
 PROXY_STRING=""
 CWD=$(pwd)
 PACKAGES="$CWD/packages"
@@ -538,8 +538,8 @@ EOF
   CONFIGURE_OPTIONS+=("--enable-libx265")
 fi
 
-if build "libvpx" "1.10.0"; then
-  download "https://github.com/webmproject/libvpx/archive/refs/tags/v1.10.0.tar.gz" "libvpx-1.10.0.tar.gz"
+if build "libvpx" "1.11.0"; then
+  download "https://github.com/webmproject/libvpx/archive/refs/tags/v1.11.0.tar.gz" "libvpx-1.11.0.tar.gz"
 
   if [[ "$OSTYPE" == "darwin"* ]]; then
     echo "Applying Darwin patch"
@@ -551,7 +551,7 @@ if build "libvpx" "1.10.0"; then
   execute make -j $MJOBS
   execute make install
 
-  build_done "libvpx" "1.10.0"
+  build_done "libvpx" "1.11.0"
 fi
 CONFIGURE_OPTIONS+=("--enable-libvpx")
 
@@ -814,8 +814,8 @@ if build "libsdl" "2.0.14"; then
 fi
 
 if $NONFREE_AND_GPL; then
-  if build "srt" "1.4.3"; then
-    download "https://github.com/Haivision/srt/archive/v1.4.3.tar.gz" "srt-1.4.3.tar.gz"
+  if build "srt" "1.4.4"; then
+    download "https://github.com/Haivision/srt/archive/v1.4.4.tar.gz" "srt-1.4.4.tar.gz"
     export OPENSSL_ROOT_DIR="${WORKSPACE}"
     export OPENSSL_LIB_DIR="${WORKSPACE}"/lib
     export OPENSSL_INCLUDE_DIR="${WORKSPACE}"/include/
@@ -826,7 +826,7 @@ if $NONFREE_AND_GPL; then
       sed -i.backup 's/-lgcc_s/-lgcc_eh/g' "${WORKSPACE}"/lib/pkgconfig/srt.pc # The -i.backup is intended and required on MacOS: https://stackoverflow.com/questions/5694228/sed-in-place-flag-that-works-both-on-mac-bsd-and-linux
     fi
 
-    build_done "srt" "1.4.3"
+    build_done "srt" "1.4.4"
   fi
   CONFIGURE_OPTIONS+=("--enable-libsrt")
 fi
@@ -886,7 +886,7 @@ if [[ "$OSTYPE" == "darwin"* ]]; then
 fi
 
 build "ffmpeg" "$FFMPEG_VERSION"
-download "https://github.com/alexliyu7352/FFmpegForServer/archive/refs/heads/release/$FFMPEG_VERSION.tar.gz" "FFmpeg-release-$FFMPEG_VERSION.tar.gz"
+download "https://github.com/alexliyu7352/FFmpegForServer/archive/refs/tags/$FFMPEG_VERSION.tar.gz" "FFmpeg-release-$FFMPEG_VERSION.tar.gz"
 # shellcheck disable=SC2086
 ./configure "${CONFIGURE_OPTIONS[@]}" \
   --disable-debug \
