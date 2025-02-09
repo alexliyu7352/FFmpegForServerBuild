@@ -961,20 +961,20 @@ cd "$PACKAGES/FFmpeg-release-20220801"  || (
 ./configure "${CONFIGURE_OPTIONS[@]}" \
   --disable-doc \
   --disable-shared \
-  --disable-ffplay --disable-indevs --disable-outdevs --disable-ffprobe\
+  --disable-ffmpeg \
+  --disable-ffplay \
+  --disable-indevs --disable-outdevs \
+  --enable-ffprobe \
   --disable-debug \
   --enable-pthreads \
   --enable-static \
   --enable-version3 \
   --disable-vaapi \
-  --disable-encoders --enable-encoder=aac --enable-encoder=srt --enable-encoder="h264*" --enable-encoder="hevc_*" --enable-encoder="libx264*" --enable-encoder="libx265*"  --enable-encoder="libfdk_aac" --enable-encoder=mpeg4 \
-  --disable-muxers  --enable-muxer=mpegts --enable-muxer=hls --enable-muxer=adts --enable-muxer=fifo --enable-muxer=flv --enable-muxer=srt --enable-muxer=h264 --enable-muxer=hevc  --enable-muxer=ac3 --enable-muxer=aac* \
-  --disable-decoders --enable-decoder=aac* --enable-decoder=ac3* --enable-decoder=eac3* --enable-decoder=flv --enable-decoder=h264* --enable-decoder=hevc* --enable-decoder=mp1* --enable-decoder=mp3* --enable-decoder=mp2* --enable-decoder=mpeg2* --enable-decoder=srt --enable-decoder=hdr --enable-decoder=h263* --enable-decoder=vp6* --enable-decoder=flac* --enable-decoder=vp9* --enable-decoder=atrac* --enable-decoder=mpeg4 --enable-decoder=libfdk_aac  --enable-decoder=audiotoolbox \
-  --disable-parsers --enable-parser=mpegaudio --enable-parser=aac* --enable-parser=ac3* --enable-parser=flac --enable-parser=h264 --enable-parser=hevc --enable-parser=h263 --enable-parser=hdr --enable-parser=mpeg4video --enable-parser=mpegvideo --enable-parser=vp9 \
-  --disable-demuxers --enable-demuxer=mpegts --enable-demuxer=aac* --enable-demuxer=flv* --enable-demuxer=hls --enable-demuxer=latm --enable-demuxer=live_flv --enable-demuxer=loas --enable-demuxer=m4v --enable-demuxer=mov --enable-demuxer=mp3* --enable-demuxer=mpegps --enable-demuxer=mpegvideo --enable-demuxer=flac --enable-demuxer=hevc --enable-demuxer=webm_dash_manifest --enable-demuxer=ac3 --enable-demuxer=mpegvideo --enable-demuxer=eac3 --enable-demuxer=h264 --enable-demuxer=mov --enable-demuxer=srt \
+  --disable-encoders \
+  --disable-muxers \
+  --disable-decoders \
+  --disable-parsers \
   --disable-sdl2 \
-  --enable-libfdk-aac \
-  --enable-demuxer=dash \
   --custom-allocator="jemalloc" \
   --extra-cflags="${CFLAGS}" \
   --extra-ldflags="${LDFLAGS}" \
@@ -982,7 +982,15 @@ cd "$PACKAGES/FFmpeg-release-20220801"  || (
   --pkgconfigdir="$WORKSPACE/lib/pkgconfig" \
   --pkg-config-flags="--static" \
   --prefix="${WORKSPACE}" \
-  --extra-version="${EXTRA_VERSION}"
+  --extra-version="${EXTRA_VERSION}" \
+  --enable-protocol=file \
+  --enable-demuxer=mov \
+  --enable-demuxer=mp4 \
+  --enable-demuxer=mpegts \
+  --enable-demuxer=flv \
+  --enable-demuxer=matroska \
+  --enable-demuxer=dash
+
 
 execute make -j $MJOBS
 execute make install
